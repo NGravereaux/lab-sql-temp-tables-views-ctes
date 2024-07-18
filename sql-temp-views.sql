@@ -10,7 +10,11 @@ c.last_name,
 c.email, 
 COUNT(r.rental_id) AS rental_count
 FROM customer AS c
-JOIN rental AS r ON c.customer_id = r.customer_id;
+JOIN rental AS r ON c.customer_id = r.customer_id
+GROUP BY 
+    c.customer_id
+ORDER BY 
+    rental_count DESC;
 
 -- call the view
 SELECT * FROM customer_rental_sum;
@@ -49,10 +53,9 @@ ctp.total_paid
 FROM customer_rental_sum AS crs
 JOIN customer_total_paid AS ctp ON crs.customer_id = ctp.customer_id)
 SELECT 
-first_name,
-last_name,
-email,
-rental_count,
-total_paid,
+*,
 ROUND(total_paid / rental_count, 2) AS average_payment_per_rental
-FROM customer_summary_cte;
+FROM customer_summary_cte
+ORDER BY 
+    rental_count DESC;
+;
